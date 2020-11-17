@@ -33,7 +33,7 @@
    - Pull secret
    - Command Line Interface for Linux and your workstations OS
    - Red Hat Enterprise Linux CoreOS (RHCOS)
-     - rhcos-X.X.X-x86_64-metal.x86_64.raw.gz
+     - [rhcos-X.X.X-x86_64-metal.x86_64.raw.gz](https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/)
      - rhcos-X.X.X-x86_64-installer.x86_64.iso
 
 ## Prepare the 'Bare Metal' environment
@@ -133,22 +133,6 @@
 
    ```bash
    git clone https://github.com/ryanhay/ocp4-metal-install
-   ```
-
-1. OPTIONAL: Create a file '~/.vimrc' and paste the following (this helps with editing in vim, particularly yaml files):
-
-   ```bash
-   cat <<EOT >> ~/.vimrc
-   syntax on
-   set nu et ai sts=0 ts=2 sw=2 list hls
-   EOT
-   ```
-
-   Update the preferred editor
-
-   ```bash
-   export OC_EDITOR="vim"
-   export KUBE_EDITOR="vim"
    ```
 
 1. Set a Static IP for OCP network interface `nmtui-edit ens224` or edit `/etc/sysconfig/network-scripts/ifcfg-ens224`
@@ -433,11 +417,9 @@
 
    ```bash
    ~/openshift-install create manifests --dir ~/ocp-install
+   sed -i 's/mastersSchedulable: true/mastersSchedulable: false/' ~/ocp-install/manifests/cluster-scheduler-02-config.yml
+   cat ~/ocp-install/manifests/cluster-scheduler-02-config.yml
    ```
-
-   > A warning is shown about making the control plane nodes schedulable. It is up to you if you want to run workloads on the Control Plane nodes. If you dont want to you can disable this with:
-   > `sed -i 's/mastersSchedulable: true/mastersSchedulable: false/' ~/ocp-install/manifests/cluster-scheduler-02-config.yml`.
-   > Make any other custom changes you like to the core Kubernetes manifest files.
 
    Generate the Ignition config and Kubernetes auth files
 
